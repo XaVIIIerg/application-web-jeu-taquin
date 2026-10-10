@@ -1,0 +1,28 @@
+sequenceDiagram
+        participant F as Frontend
+        participant C as MapController
+        participant S as MapService
+        participant R as MapRepository
+        
+        F->>C: Requête : PATCH /api/games/{id}/{newName}
+        activate C
+        C->>S: renameMap(id: Long, name: String)
+        activate S
+        S->>R: renameById(id: Long, name: String)
+        activate R
+        alt Map d'id id d'entrée présente dans repository
+            R->>S: Map d'id id
+            deactivate R
+            S->>C: Map d'id id
+            deactivate S
+            C->>F: Map code 200 : OK
+            deactivate C
+        else Pas de Map d'id l'id d'entrée dans le repository
+            R->>S: null
+            S->>C: null
+            C->>F: null code 404: NOT_FOUND "Map Not Found"
+            else Id de map invalide
+            R->>S: null
+            S->>C: null
+            C->>F: null code 400: BAD_REQUEST "Invalid Map ID"
+        end

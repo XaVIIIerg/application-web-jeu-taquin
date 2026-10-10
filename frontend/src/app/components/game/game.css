@@ -1,0 +1,406 @@
+.game {
+  padding: 20px;
+}
+
+.game-header {/*  display du nom*/
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 25px;
+  border-radius: 8px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+/*  positionnement du nom du joueur*/
+.player-info {
+  text-align: right;
+  margin-bottom: 100px;
+}
+/*  Mise en forme du nom du joueur*/
+.player-name {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #212529;
+  background: #f8f9fa;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 2px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+/*  mise en forme du nom du joueur lorsqu'il est editable (non cliqué)*/
+.player-name.editable {
+  cursor: pointer;
+  border-color: #007bff;
+}
+/*  Animation de survol du nom du joueur*/
+.player-name.editable:hover {
+  background: #e7f3ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+/*  Positionnement du rectangle contenant le nom lors de l'edition*/
+.name-edit-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+/*  Lorsque l'on edit le nom*/
+.player-name-edit {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 2px solid #28a745;
+  background: #f8f9fa;
+  text-align: center;
+  min-width: 200px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+/* Lorsque l'on reclique le nom pendant l'edition*/
+.player-name-edit:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+/*  texte en dessous de l'edition du nom*/
+.name-edit-hint {
+  font-size: 0.8em;
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+}
+/*  position du cercle de score avec score dedans */
+.score-circle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 35px;
+}
+/*  position du cercle */
+.score-circle {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+/* Cercle de fond (gris) */
+.circle-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 8px solid #e9ecef;
+  box-sizing: border-box;
+}
+
+/* Bordure colorée qui progresse */
+.circle-progress {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(#28a745 0deg,
+      #28a745 calc(var(--progress, 0) * 3.6deg),
+      transparent calc(var(--progress, 0) * 3.6deg),
+      transparent 360deg);
+  -webkit-mask: radial-gradient(circle, transparent 65%, black 66%);
+  mask: radial-gradient(circle, transparent 65%, black 66%);
+  box-sizing: border-box;
+  transition: --progress 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.circle-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+  background: white;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+  /* Animation au survol */
+}
+
+/* Animation au survol du cercle */
+.score-circle:hover .circle-content {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+/*  numéro de tour */
+.turn-number {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: #212529;
+  transition: all 0.3s ease;
+}
+/*  fraction du score */
+.score-fraction {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #212529;
+  transition: all 0.3s ease;
+}
+
+.game-content {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+/*  position pieces disponibles */
+.pieces-panel {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 1001;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 220px;
+}
+/*  position texte des pieces disponibles */
+.pieces-panel h3 {
+  margin: 0 0 8px 0;
+  text-align: center;
+  font-size: 1.2em;
+}
+/*  position pieces disponibles dans la grille */
+.pieces-grid {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+/*  Mise en forme des pieces disponibles dans la grille */
+.piece-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  min-width: 60px;
+  position: relative;
+}
+/*  animation au survol si la piece est effectivement disponible */
+.piece-item:hover:not(.disabled) {
+  border-color: #007bff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+/*  transformation à la sélection de la piece*/
+.piece-item.selected {
+  border-color: #007bff;
+  background-color: #e7f3ff;
+  transform: translateY(-2px);
+}
+/*  mise en forme des pieces non disponibles et du curseur au survol */
+.piece-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f8f9fa;
+}
+/*  Animation de survol pour pieces non disponibles*/
+.piece-item.disabled:hover {
+  transform: none;
+  border-color: #ccc;
+  box-shadow: none;
+}
+/*  Mise en forme du nombre de pieces disponibles */
+.piece-count {
+  font-size: 1em;
+  font-weight: bold;
+  color: #333;
+  background: #f8f9fa;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #dee2e6;
+}
+/*  Mise en forme du nombre de pieces disponibles à la selection*/
+.piece-item.selected .piece-count {
+  background: #007bff;
+  color: white;
+  border-color: #0056b3;
+}
+/*  position des boutons undo redo */
+.undo-redo-buttons {
+  position: absolute;
+  bottom: 80px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+/*  Mise en forme des boutons undo redo */
+.undo-button,
+.redo-button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.undo-button:hover:not(:disabled),
+.redo-button:hover:not(:disabled) {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+}
+/*  Mise en forme du nombre des boutons undo redo indisponibles */
+.undo-button:disabled,
+.redo-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/*  Mise en forme des boutons undo et redo*/
+.undo-icon,
+.redo-icon {
+  width: 25px;
+  height: 25px;
+}
+/*  position bouton terminer le jeu */
+.game-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1001;
+}
+
+/*Crédit à https://gradientbuttons.colorion.co/ pour les bouttons*/
+/*  couleur gradiente du bouton terminer le jeu */
+.game-controls button {
+  background-image: linear-gradient(to right, #cb2d3e 0%, #ef473a  51%, #cb2d3e  100%)
+}
+/*  Mise en forme du bouton terminer le jeu*/
+.game-controls button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+/*  animation au survol du bouton terminer le jeu */
+.game-controls button:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+
+/* Créez un overlay qui couvre toute la fenêtre */
+.game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Style pour le contenu du game over */
+.game-over-content {
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 15px;
+  min-width: 300px;
+  min-height: 200px;
+}
+/*  Mise en forme du texte 'fin du jeu'*/
+.game-over-content h2 {
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+/*  Mise en forme du texte score final dans le game over */
+.final-score {
+  font-size: 2em;
+  margin-bottom: 40px;
+  padding: 20px 40px;
+  border-radius: 10px;
+}
+
+/*Crédit à https://gradientbuttons.colorion.co/ pour les bouttons*/
+/*  couleur gradiente du bouton retour au menu lorsque game over */
+.menu-button {
+  background-image: linear-gradient(to right, #76b852 0%, #8DC26F  51%, #76b852  100%)
+}
+/*  Mise en forme du bouton retour au menu */
+.menu-button {
+  padding: 15px 30px;
+  font-size: 1.2em;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  display: block;
+}
+/*  animation au survol du bouton retour au menu */
+.menu-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.no-game {
+  text-align: center;
+  padding: 40px;
+}
+
+.no-game a {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}

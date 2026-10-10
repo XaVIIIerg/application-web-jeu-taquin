@@ -1,0 +1,14 @@
+@font-face {
+  font-family: Bodo;
+  src: url("/BodoAmat.ttf");
+}
+
+* {
+  font-family: Bodo;
+}
+/*  affichage du nom du projet*/
+h1 {
+  position: absolute;
+  top: 2%;
+  left: 4%;
+}

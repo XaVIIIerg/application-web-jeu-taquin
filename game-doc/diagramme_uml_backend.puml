@@ -1,0 +1,70 @@
+@startuml BackendGameDataModel
+
+class Map {
+    - id: Long
+    - name: String
+    - tiles: Tile[]
+    + getId(): Long
+    + getName(): String
+    + getTiles(): Tile[]
+    + generateRandomMap()
+}
+
+
+class MapRepository {
+    - listMap:List<Map>
+    + findAll(): List<Map>
+    + findById(id: Long): Optional<Map>
+    + findByName(name: String): Optional<Map>
+    + save(name:String):Map
+    + renameById(id: Long, name: String): Optional<Map>
+}
+
+
+class MapService {
+    - mapRepository: MapRepository
+    + getAllMaps(): List<Map>
+    + getMapById(id: Long): Optional<Map>
+    + getMapByName(name: String): Optional<Map>
+    + createMap(name: String): Map
+    + renameMap(id: Long, name: String): Optional<Map>
+}
+
+
+class MapController {
+    - mapService:MapService
+    + getAllMaps(): ResponseEntity<List<Map>>
+    + getMapById(id: Long): ResponseEntity<Map>
+    + getMapByName(name: String): ResponseEntity<Map>
+    + createMap(name: String): ResponseEntity<Map>
+    + renameMap(id: Long, name: String) : ResponseEntity<Map>
+}
+
+
+class Tile {
+  + position:Position
+  + type: TileType
+}
+
+
+enum TileType {
+      TREE
+      WATER
+      PLAIN
+}
+
+class Position {
+    - x:int
+    - y:int
+    + getX():int
+    + getY():int
+}
+
+
+Tile "*" -- "1" TileType
+Map "1" *-- "64" Tile
+MapRepository "1" -- "*" Map
+MapService "1" -- "1" MapRepository
+MapController "1" -- "1" MapService
+
+@enduml

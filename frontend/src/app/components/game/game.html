@@ -1,0 +1,106 @@
+<!--Si il y a un jeu et qu'il n'est pas terminé on montre le jeu-->
+@if (game) {
+<div class="game" [class.blurred]="isGameOver">
+  <!-- En-tête -->
+  <div class="game-header">
+    <!-- Partie gauche de l'en-tête -->
+    <div class="header-left">
+      <!--Compteur du score-->
+      <div class="score-circle-container">
+        <div class="score-circle">
+          <div class="circle-background"></div>
+          <div class="circle-progress" [style.--progress]="scorePercentage"></div>
+          <div class="circle-content">
+            <div class="score-fraction">{{game.currentScore}} / {{game.nextScoreLevel}}</div>
+            <div class="turn-number">Tour #{{game.currentTurn}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Partie droite de l'en-tête -->
+    <div class="header-right">
+      <div class="player-info">
+        <!-- Mode affichage normal -->
+        @if (!isEditingName) {
+        <span class="player-name" (click)="startEditingName()" [class.editable]="!isGameOver">
+          {{game.player}}
+        </span>
+        }
+        <!-- Mode édition -->
+        @if (isEditingName) {
+        <div class="name-edit-container">
+          <input type="text" [(ngModel)]="tempPlayerName" (keyup.enter)="savePlayerName()"
+            (keyup.escape)="cancelEditingName()" (blur)="savePlayerName()" class="player-name-edit"
+            placeholder="Votre nom" autofocus>
+          <div class="name-edit-hint">Appuyez sur Entrée pour valider</div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!--On appelle la map-->
+  <div class="map-area">
+    <app-map [map]="game.map" [selectedPieceType]="selectedPieceType"
+      [getScoreDetails]="getScoreDetailsForTile.bind(this)" (tileClick)="onTileClick($event)">
+    </app-map>
+  </div>
+
+  <!-- Pièces disponibles -->
+  <div class="pieces-panel">
+    <h3>Pièces disponibles</h3>
+    <div class="pieces-grid">
+      <div class="piece-item" [class.selected]="selectedPieceType === AnimalType.BEAR"
+        [class.disabled]="getPieceCount(AnimalType.BEAR) === 0 || isGameOver"
+        (click)="selectPieceType(AnimalType.BEAR)">
+        <img src="/bear.svg" class="piece-icon">
+        <span class="piece-count">{{getPieceCount(AnimalType.BEAR)}}</span>
+      </div>
+
+      <div class="piece-item" [class.selected]="selectedPieceType === AnimalType.FISH"
+        [class.disabled]="getPieceCount(AnimalType.FISH) === 0 || isGameOver"
+        (click)="selectPieceType(AnimalType.FISH)">
+        <img src="/fish.svg" class="piece-icon">
+        <span class="piece-count">{{getPieceCount(AnimalType.FISH)}}</span>
+      </div>
+
+      <div class="piece-item" [class.selected]="selectedPieceType === AnimalType.FOX"
+        [class.disabled]="getPieceCount(AnimalType.FOX) === 0 || isGameOver" (click)="selectPieceType(AnimalType.FOX)">
+        <img src="/fox.svg" class="piece-icon">
+        <span class="piece-count">{{getPieceCount(AnimalType.FOX)}}</span>
+      </div>
+    </div>
+  </div>
+
+  <!--Boutons d'undo/redo-->
+  <div class="undo-redo-buttons">
+    <button (click)="undo()" [disabled]="!canUndo() || isGameOver" class="undo-button" title="Annuler">
+      <img src="/undo.png" class="undo-icon">
+    </button>
+    <button (click)="redo()" [disabled]="!canRedo() || isGameOver" class="redo-button" title="Refaire">
+      <img src="/redo.png" class="redo-icon">
+    </button>
+  </div>
+
+  <!--Bouton de fin de jeu-->
+  <div class="game-controls">
+    <button [ioButton]="binderClickEndGame">Terminer le jeu</button>
+  </div>
+</div>
+<!--Si le jeu est terminé on montre le menu de fin de jeu-->
+@if (isGameOver) {
+<div class="game-overlay">
+  <div class="game-over-content">
+    <h2>Fin du jeu {{game.player}}.</h2>
+    <div class="final-score">Score : {{game.currentScore}}</div>
+    <button (click)="goHome()" class="menu-button">Retour au menu</button>
+  </div>
+</div>
+}
+} @else {
+<!--Si j'ai pas de jeu en cours-->
+<div class="no-game">
+  <p>Aucun jeu en cours. <a (click)="goHome()">Menu</a></p>
+</div>
+}

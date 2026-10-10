@@ -1,0 +1,128 @@
+.map-selector {/*  disposition des différentes maps dans le menu*/
+	padding: 60px;
+	text-align: center;
+	max-width: 800px;
+	margin: 0 auto;
+}
+/*  disposition des différentes maps dans le menu*/
+.select {
+	font-size: 1.5em;
+	font-weight: bold;
+	background: -webkit-linear-gradient(#116616, #2ec1db);
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+/*  dispositions de l'image déroulante en haut à gauche*/
+.background {
+	background: url("/bg.png");
+	background-size: 300px 100px;
+	background-repeat: repeat-x;
+
+	height: 100px;
+	width: 450px;
+
+	opacity: 0.5;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+
+	animation: slide 3s linear infinite;
+	
+}
+
+@keyframes slide {
+	0% {
+		background-position: 0 0;
+	}
+
+	100% {
+		background-position: -300px 0;
+	}
+}
+
+
+@-moz-keyframes slide {
+	0% {
+		background-position: 0 0;
+	}
+
+	100% {
+		background-position: 300px 0;
+	}
+}
+
+@keyframes slide {
+	0% {
+		background-position: 0 0;
+	}
+
+	100% {
+		background-position: 300px 0;
+	}
+}
+/*  positionnement du nom dans le menu*/
+.player-name {
+	margin: 20px 0;
+}
+/*  Mise en forme de la case pour entrer son nom*/
+.name-input {
+	padding: 8px 12px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-left: 10px;
+	width: 250px;
+
+}
+/*  animation au survol de cette case*/
+.name-input:hover {
+	background-color: #dfdddd;
+	transition: 0.5s;
+}
+/*  Mise en page de la liste des maps dans le menu*/
+.maps-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: center;
+	margin-top: 30px;
+}
+/*  Mise en page des maps dans la liste des maps*/
+.map-item {
+
+	padding: 15px;
+	border: 2px solid #ccc;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.3s;
+	width: 200px;
+}
+/*  animation au survol des maps dans le menu*/
+.map-item:hover {
+	background-color: #f0f0f0;
+	border-color: #007bff;
+	transform: translateY(-2px);
+}
+/*  Mise en forme du bouton pour créer une nouvelle map dans la liste des maps*/
+.map-item.new-map {
+	border-style: dashed;
+	border-color: #ccc;
+}
+
+.map-item.new-map:hover {
+	border-style: dashed;
+	border-color: #007bff;
+}
+
+.loading {
+	margin: 20px;
+	color: #007bff;
+}
+
+.error {
+	margin: 20px;
+	color: #dc3545;
+	background-color: #f8d7da;
+	padding: 10px;
+	border-radius: 4px;
+}

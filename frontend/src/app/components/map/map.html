@@ -1,0 +1,28 @@
+<div>
+  <div class="map-title">
+    <h2>{{map.name}}</h2>
+  </div>
+  <!--Affichage de la map-->
+  <div class="map">
+    @for (tile of map.tiles; track $index) {
+    <div class="tile-container">
+      <!--Si il n'y a pas de pièces sur la tuile j'affiche la tuile-->
+      @if(!tile.piece){
+      <img class="tile" [class.initial]="shouldAnimateTile(tile)" [src]="getTerrainImage(tile)" draggable="false"
+        (click)="onTileClick(tile)" (mouseenter)="onTileHover(tile)" (mouseleave)="onTileHoverEnd()" />
+      }
+      <!--Sinon j'affiche la pièce-->
+      @if (tile.piece) {
+      <img class="tile piece" [src]="getPieceImage(tile)" draggable="false" (click)="onTileClick(tile)"
+        (mouseenter)="onTileHover(tile)" (mouseleave)="onTileHoverEnd()" />
+      }
+      <!-- Affichage du score quand on survol la tuile -->
+      @if (shouldShowScore(tile)) {
+      <div class="score-display" [class.base-score]="tile === hoveredTile" [class.detail-score]="tile !== hoveredTile">
+        {{ getScoreForTile(tile) }}
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

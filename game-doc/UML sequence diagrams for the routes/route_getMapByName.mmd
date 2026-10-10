@@ -1,0 +1,28 @@
+sequenceDiagram
+        participant F as Frontend
+        participant C as MapController
+        participant S as MapService
+        participant R as MapRepository
+        
+        F->>C: Requête : GET /api/games/{name}
+        activate C
+        C->>S: getMapByName(name: String)
+        activate S
+        S->>R: findbyName()
+        activate R
+        alt Map de nom name présente dans repository
+            R->>S: Map de nom name
+            deactivate R
+            S->>C: Map de nom name
+            deactivate S
+            C->>F: Map code 200 : OK
+            deactivate C
+        else Pas de Map de nom name dans le repository
+            R->>S: null
+            S->>C: null
+            C->>F: null code 404: NOT_FOUND "Map Not Found"
+            else Nom de map invalide
+            R->>S: null
+            S->>C: null
+            C->>F: null code 400: BAD_REQUEST "Invalid Map Name"
+        end

@@ -1,0 +1,24 @@
+sequenceDiagram
+        participant F as Frontend
+        participant C as MapController
+        participant S as MapService
+        participant R as MapRepository
+        
+        F->>C: Requête : GET /api/games
+        activate C
+        C->>S: getAllMaps()
+        activate S
+        S->>R: findAll()
+        activate R
+        alt Maps présentes dans le repository
+            R->>S: List<Map>
+            deactivate R
+            S->>C: List<Map>
+            deactivate S
+            C->>F: List<Map> code 200 : OK
+            deactivate C
+        else Problème d'implémentation, pas de Map dans le repository
+            R->>S: Liste vide 
+            S->>C: Liste vide
+            C->>F: Liste vide code 404: NOT_FOUND
+        end

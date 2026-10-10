@@ -1,0 +1,43 @@
+sequenceDiagram
+        participant F as Frontend
+        participant C as MapController
+        participant S as MapService
+        participant R as MapRepository
+        participant M as Map
+        participant T as Tile
+        F->>C: Requête : POST /api/games/{name}
+        activate C
+        C->>S: createMap(name: String)
+        activate S
+        S->>R: saveMap(name: String)
+        activate R
+        alt nom de map valide
+            R->>M: constructor(name: String)
+            activate M
+            loop 64 fois
+                M->>T: constructor() 
+                activate T
+                T->>M: Tile (répond 64 fois pour les 64 tuiles)
+                deactivate T
+            end
+            M->>R: Map de nom name
+            deactivate M
+            R->>S: Map de nom name
+            deactivate R
+            S->>C: Map de nom name
+            deactivate S
+            C->>F: Map créée code 201
+            deactivate C
+        else Map de nom name déjà présente dans repository
+            R->>S: null
+            S->>C: null
+            C->>F: code 405 : METHOD_NOT_ALLOWED
+            
+        else nom de map invalide
+            
+            M->>R: null
+            R->>S: null
+            S->>C: null
+            
+            C->>F: null code 400: BAD_REQUEST "Invalid Map name"
+        end

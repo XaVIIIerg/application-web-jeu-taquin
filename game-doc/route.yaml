@@ -1,0 +1,200 @@
+openapi: 3.0.4
+info:
+  title: Jeu
+  description: routes rest du projet web
+  version: 1.0.12
+
+servers:
+  - url: http://localhost:8080/api
+    description: Serveur local
+
+paths:
+  /games:
+    get:
+      summary: Récupérer toutes les cartes disponibles
+      operationId: getAllMaps
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Map'
+        '404':
+          description: Carte non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+
+  /games/{name}:
+    get:
+      summary: Récupérer une carte par son nom
+      operationId: getMapByName
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "CoolMap"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Map'
+        '400':
+          description: Nom de carte invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInvalid'
+        '404':
+          description: Carte non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    post:
+      summary: Créer une nouvelle carte
+      operationId: createMap
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "CoolMap"
+      responses:
+        '201':
+          description: Carte créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Map'
+        '400':
+          description: Nom de carte invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInvalid'
+        '405':
+          description: Une carte avec ce nom existe déjà
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAlreadyTaken'
+
+  /games/{id}:
+    get:
+      summary: Récupérer une carte par son ID
+      operationId: getMapById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Map'
+        '400':
+          description: ID de carte invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInvalid'
+        '404':
+          description: Carte non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+
+  /games/{id}/{newName}:
+    patch:
+      summary: Renommer une carte existante
+      operationId: renameMap
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+        - name: newName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "NewCoolMap"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Map'
+        '400':
+          description: ID de carte ou nouveau nom invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInvalid'
+        '404':
+          description: Carte non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+
+components:
+  schemas:
+    Map:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "CoolMap"
+        tiles:
+          type: array
+          items:
+            type: string
+            enum: [PLAIN, TREE, WATER]
+          example: ["PLAIN", "TREE", "WATER"]
+
+    ErrorNotFound:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Map not found"
+
+    ErrorInvalid:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid request"
+          
+    ErrorAlreadyTaken:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "A map with this name already exists"

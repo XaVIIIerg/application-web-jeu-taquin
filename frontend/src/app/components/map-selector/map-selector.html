@@ -1,0 +1,33 @@
+<div class="map-selector">
+	<div class="select">Sélectionnez une carte</div>
+	<div class="background"></div>
+	<!--Liste des maps-->
+	<div class="maps-list">
+		@for (map of availableMaps; track map.name) {
+			<!--Maps présentes dans le backend-->
+		<div class="map-item" (click)="selectMap(map.name)">
+			<h3>{{ map.name }}</h3>
+		</div>
+		}
+		<!--Bouton de création de map aléatoire-->
+		<div class="map-item new-map" (click)="createRandomMap()">
+			<h3>Nouvelle carte aléatoire</h3>
+			<p>Créer une nouvelle carte générée aléatoirement</p>
+		</div>
+	</div>
+
+	<!--Nom du joueur à écrire-->
+	<div class="player-name">
+		<label>Votre nom :</label>
+		<input [(ngModel)]="playerName" placeholder="Laissez vide pour un nom aléatoire" class="name-input">
+	</div>
+	
+	@if (loading) {
+	<!--Ajoute le chargement en bas c'est choupi-->
+	<div class="loading">Chargement...</div>
+	}
+
+	@if (error) {
+	<div class="error">{{ error }}</div>
+	}
+</div>

@@ -1,0 +1,107 @@
+@startuml GameDataModel
+
+class Game {
+    - currentTurn: number
+    - currentScore: number
+    - nextScoreLevel: number
+    - player: string
+    - map: Map
+    - availablePieces: AnimalPiece[]
+    - placedPiece: playedPiece[]
+    + nextTurn(): void
+    + getName(): string
+    + setName(nom : string): number
+    + placePiece(piece: AnimalPiece, position: Position): void
+    + getScoreValue(): number
+    + calculateScore(piece : AnimalPiece, Tile : tile): number
+    + createPiece(type : AnimalType, position: Position):AnimalPiece
+    + isGameOver(availablePieces: AnimalPiece[]): boolean
+}
+
+
+
+class Map {
+    - name: string
+    - tiles: Tile[]
+    + getTile(position: Position): Tile
+    + isFull(): boolean
+}
+
+class TileType {
+    <<enumeration>>
+    PLAIN
+    WATER
+    FOREST
+}
+
+class Tile {
+    - position: Position
+    - type : TileType
+    - piece : AnimalPiece
+    + setPiece(piece : AnimalPiece) : void
+    + isEmpty() : boolean
+    + canAccept(piece : AnimalPiece) : boolean
+}
+
+class PlacedPiece{
+    +piece: AnimalPiece
+    +tile:Tile
+    +turnPlaced:number
+}
+
+class Position {
+    - x: number
+    - y: number
+    + getX(): number
+    + getY(): number
+}
+
+class AnimalPiece {
+    <<abstract>>
+    - type: AnimalType
+    + getType(): AnimalType
+    + calculatePoints(map: Map, position: Position): number
+}
+
+class BearPiece {
+    + calculatePoints(map: Map, position: Position): number
+}
+
+class FishPiece {
+    + calculatePoints(map: Map, position: Position): number
+}
+
+class FoxPiece {
+    + calculatePoints(map: Map, position: Position): number
+}
+
+class AnimalType {
+    <<enumeration>>
+    BEAR
+    FISH
+    FOX
+}
+
+class GameService {
+    - currentGame: Game
+    + startNewGame(playerName: string, map: Map): void
+    + getCurrentGame(): Game
+    + endGame(): void
+    
+}
+
+
+Game "1" *-- "1" Map
+PlacedPiece "1" *-- "1" AnimalPiece
+AnimalType "1" -- "*" AnimalPiece
+PlacedPiece "1" *-- "1" Tile
+PlacedPiece "*" --* "1" Game
+Tile"1" *-- "1" AnimalPiece
+Tile "*" -- "1" TileType
+Map "1" *-- "64" Tile
+AnimalPiece <|-- BearPiece
+AnimalPiece <|-- FishPiece
+AnimalPiece <|-- FoxPiece
+GameService "1" -- "1" Game
+
+@enduml

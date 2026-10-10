@@ -1,0 +1,28 @@
+sequenceDiagram
+        participant F as Frontend
+        participant C as MapController
+        participant S as MapService
+        participant R as MapRepository
+        
+        F->>C: Requête : GET /api/games/{id}
+        activate C
+        C->>S: getMapById(searchedid : Long)
+        activate S
+        S->>R: findbyId()
+        activate R
+        alt Map d'id searchedid présente dans repository
+            R->>S: Map d'id searchedid
+            deactivate R
+            S->>C: Map d'id searchedid
+            deactivate S
+            C->>F: Map code 200 : OK
+            deactivate C
+        else Pas de Map d'id searchedid dans le repository
+            R->>S: null
+            S->>C: null
+            C->>F: null code 404: NOT_FOUND "Map Not Found"
+            else Id de map invalide
+            R->>S: null
+            S->>C: null
+            C->>F: null code 400: BAD_REQUEST "Invalid Map ID"
+        end

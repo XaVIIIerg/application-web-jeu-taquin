@@ -1,0 +1,99 @@
+div {/*  mise en forme de la map*/
+  --size-cell: 58px;
+  --nb-cell: 8;
+  --z-rotate: 45deg;
+  --x-rotate: 60deg;
+}
+/*  mise en forme du nom de la map*/
+.map-title{
+  font-size: 1.2em;
+}
+/*  mise en forme de la map*/
+.map {
+  line-height: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /*On a modifié pour centrer la map*/
+  transform: translateX(-50%) translateY(-50%) scale(2) rotateX(var(--x-rotate)) rotateZ(var(--z-rotate));
+  margin: auto;
+  width: calc(var(--size-cell) * var(--nb-cell));
+  z-index: 1000;
+}
+/*  mise en forme des tiles*/
+.tile {
+  user-select: none;
+  margin: 0 -21px;
+  transform: rotateZ(-45deg) rotateY(-60deg) scale(1.6);
+  clip-path: polygon(50px 0, 0 25px, 0 32px, 50px 58px, 100px 33px, 100px 25px, 50px 0);
+  transition: all 0.4s;
+}
+
+/* Animation uniquement au début */
+.tile.initial {
+  transform: rotateZ(-45deg) rotateY(-60deg) scale(0); /* Départ à 0 pour l'animation */
+  animation: tileZoom 1.5s ease-out forwards;
+}
+
+@keyframes tileZoom {
+  from {
+    transform: rotateZ(-45deg) rotateY(-60deg) scale(0);
+  }
+  to {
+    transform: rotateZ(-45deg) rotateY(-60deg) scale(1.6);
+  }
+}
+/*  animation au survol des tuiles*/
+.tile:hover {
+    transform: rotateZ(-45deg) rotateY(-60deg) scale(1.65) translateY(6px);
+    opacity: 0.8;
+    transition: all 0.4s;
+}
+/*  mise en forme des tuiles remplies*/
+.tile.piece {
+  user-select: none;
+  margin: 0 -21px;
+  transform: rotateZ(-45deg) rotateY(-60deg) scale(1.6);
+  clip-path: polygon(50px 0, 0 25px, 0 32px, 50px 58px, 100px 33px, 100px 25px, 50px 0);
+}
+/*  animation au survol des tuiles remplies*/
+.tile.piece:hover {
+  opacity: 1;
+}
+/*  mise en forme des tuiles*/
+.tile-container {
+  position: relative;
+  display: inline-block;
+}
+/*  mise en forme du score displayed sur la map lorsqu'on fait passer une piece dessus*/
+.score-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) /*rotateZ(-45deg) rotateY(-60deg) scale(1.6)*/; /* Si tu veux avoir un texte pas penché décommente cette partie (je trouve plus joli penché mais c'est moins lisible)*/
+  font-size: 20px;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 1001;
+  animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@font-face {
+  font-family: Bodo;
+  src: url("/BodoAmat.ttf");
+}
+
+* {
+  font-family: Bodo;
+}
+/*  positionnement du nom de la map*/
+h2 {
+  position: absolute;
+  top: 2%;
+  right: 4%;
+}
